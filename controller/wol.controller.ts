@@ -7,7 +7,7 @@ dotenv.config();
 
 export class wolController {
     wakeup = async (req: Request, res: Response) => {
-        const { MAC, ip } = req.body;
+        const { MAC } = req.body;
         try {
             wakeOnLan.wake(MAC, function (error: any) {
                 if (error) {

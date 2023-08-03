@@ -3,9 +3,9 @@ import { wolController } from "../controller/wol.controller";
 
 export class wolRoutes {
     router = Router();
-    private ac: wolController = new wolController();
+    private wc: wolController = new wolController();
     constructor() {
         // Route to wake 
-        this.router.get('/wake', this.ac.wakeup);
+        this.router.get('/wake', this.wc.wakeup);
     }
 }
