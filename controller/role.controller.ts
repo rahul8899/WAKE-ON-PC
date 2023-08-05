@@ -28,7 +28,27 @@ export class roleController {
             console.log("Error in creating Role", error);
             return res.status(500).json({ message: 'Internal server error' });
         }
-    }
+    };
+
+    selectAllRole = async (req: Request, res: Response) => {
+        try {
+            const role = await Role.findAll();
+            if (role) {
+                return res.json({
+                    success: true,
+                    data: role
+                })
+            } else {
+                res.json({
+                    success: false
+                })
+            }
+        } catch (error) {
+            console.log("Error in Fetching role", error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    };
+
     updateRole = async (req: Request, res: Response) => {
         const { role_id } = req.params;
         const { body } = req;
@@ -50,6 +70,7 @@ export class roleController {
             return res.status(500).json({ message: 'Internal server error' });
         }
     };
+
     deleteRole = async (req: Request, res: Response) => {
         const { role_id } = req.params;
         try {
@@ -61,10 +82,10 @@ export class roleController {
                     message: 'Role deleted successfully'
                 });
             } else {
-                return res.status(404).json({
+                return res.json({
                     success: false,
                     message: 'Role not found'
-                });
+                })
             }
         } catch (error) {
             console.error('Error deleting Role:', error);
