@@ -1,5 +1,8 @@
 # ignore all node modules
 /node_modules
 
-ignore .env file
+# ignore .env file
 *.env
+
+*.sqlite
+wakeonlan.sqlite
