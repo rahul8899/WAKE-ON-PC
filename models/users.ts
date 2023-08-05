@@ -1,5 +1,7 @@
+import { allow } from "joi";
 import db from "./index";
 import { DataTypes } from "sequelize";
+import { Role } from "./role";
 
 export const Users = db.sequelize.define('users', {
     user_id: {
@@ -9,8 +11,16 @@ export const Users = db.sequelize.define('users', {
         unique: true,
         allowNull: false
     },
+    user_name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     email: {
         type: DataTypes.STRING,
+        allowNull: false
+    },
+    role_id: {
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     password: {
@@ -31,3 +41,5 @@ export const Users = db.sequelize.define('users', {
         }
     ]
 });
+
+Users.belongsTo(Role, { foreignKey: 'role_id' });

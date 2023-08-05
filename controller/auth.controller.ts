@@ -5,36 +5,10 @@ import bcrypt from "bcrypt";
 import * as dotenv from "dotenv";
 dotenv.config()
 
-export const JWT_SECRET = "rahulkaklotar";
-export class authController {
-    registerUser = async (req: Request, res: Response) => {
-        const { email, password } = req.body;
-        try {
-            // check is user is allredy registed or not.
-            const existingUser = await Users.findOne({ where: { email } });
-            if (existingUser) {
-                return res.status(409).json({
-                    message: "Email is allredy registed."
-                })
-            };
 
-            // hashing the password
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const newUser = await Users.create({
-                email,
-                password: hashedPassword,
-            });
-            return res.status(201).json({
-                message: "User registed successfully",
-                newUser
-            });
-        } catch (error) {
-            console.log("Error in registering user", error);
-            return res.status(500).json({
-                message: "Enternal server Error"
-            });
-        }
-    }
+const JWT_SECRET: any = process.env.JWT_SECRET || 'rahulkaklotar';
+
+export class authController {
 
     loginUser = async (req: Request, res: Response) => {
         const { email, password } = req.body;
@@ -52,7 +26,8 @@ export class authController {
             }
 
             // Generate a JWT token and send it in the response
-            const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "1h" });
+            const token = jwt.sign({ userId: user.user_id }, JWT_SECRET);
+            // const token = jwt.sign({ userId: user.user_id }, JWT_SECRET, { expiresIn: "1h" });
 
             return res.status(200).json({
                 message: "Login successful",
