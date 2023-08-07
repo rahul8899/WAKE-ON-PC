@@ -1,12 +1,12 @@
 import { Router } from "express";
 import pcStatusController from "../controller/pcStatus.controller";
-
+import { authMiddleware } from "../middleware/auth.middleware";
 export class pcStatusRoutes {
     router = Router();
     private psc: pcStatusController = new pcStatusController();
     constructor() {
-        // Route to wake 
-        this.router.get('/isturnon', this.psc.isPCTurnedOn);
+        // Route to wake on PC 
+        this.router.get('/isturnon', authMiddleware, this.psc.isPCTurnedOn);
 
         // const checkIntervalInMilliseconds = 10 * 1000; // 1 minute
         // setInterval(async () => {

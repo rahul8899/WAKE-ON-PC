@@ -2,11 +2,13 @@ import { Router } from "express";
 import { permissionController } from "../controller/permission.controller";
 import { bodyValidate } from "../middleware/validate.schema.middleware";
 import { permissionSchema } from "../schema.validate/permission.schema";
+import { authMiddleware } from "../middleware/auth.middleware";
 
 export class permissionRoutes {
     router = Router();
     private pc: permissionController = new permissionController();
     constructor() {
-        this.router.post('/createDelete', bodyValidate(permissionSchema), this.pc.changePermission);
+        // routes to create or update permission.
+        this.router.post('/', authMiddleware, bodyValidate(permissionSchema), this.pc.changePermission);
     }
 }
