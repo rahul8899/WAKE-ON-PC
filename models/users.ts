@@ -1,5 +1,4 @@
-import { allow } from "joi";
-import db from "./index";
+import db from "../models/index";
 import { DataTypes } from "sequelize";
 import { Role } from "./role";
 
