@@ -11,7 +11,8 @@ export const Module = db.sequelize.define('module', {
     },
     module_name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     }
 }, {
     tableName: 'module',

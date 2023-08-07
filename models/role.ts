@@ -11,7 +11,8 @@ export const Role = db.sequelize.define('role', {
     },
     role_name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     }
 }, {
     tableName: 'role',
