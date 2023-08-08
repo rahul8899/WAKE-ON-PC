@@ -2,8 +2,10 @@ import { Request, Response } from "express";
 import { pcList } from "../models/pcList";
 import { Users } from "../models/users";
 import { Sequelize } from "sequelize-typescript";
+import { PcStatusController } from "../service/pcStatus/pcStatus.controller";
 
 export class pcListController {
+    private pcc: PcStatusController = new PcStatusController();
     createPC = async (req: Request, res: Response) => {
         const { user_name, MAC, IP } = req.body;
         try {
@@ -108,6 +110,52 @@ export class pcListController {
         } catch (error) {
             console.log("There is error in deleting PC", error);
             return res.status(500).json({ message: 'Internal server error' });
+        }
+    };
+
+    countPCs = async (req: Request, res: Response) => {
+        try {
+            const pcCount = await pcList.count();
+            res.json({ totalPC: pcCount });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Internal server error" });
+        }
+    };
+
+    ccountTurnedOnPCs = async (req: Request, res: Response) => {
+        try {
+            const allPCs = await pcList.findAll();
+            let turnedOnPCCount = 0;
+
+            for (const pc of allPCs) {
+                const isTurnedOn = await this.pcc.pingIP(pc.IP);
+                if (isTurnedOn) {
+                    turnedOnPCCount++;
+                }
+            }
+            res.json({ turnedOnPC: turnedOnPCCount });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Internal server error" });
+        }
+    };
+    ccountTurnedOffPCs = async (req: Request, res: Response) => {
+        try {
+            const allPCs = await pcList.findAll();
+            let turnedOffPCCount = 0;
+
+            for (const pc of allPCs) {
+                const isTurnedOn = await this.pcc.pingIP(pc.IP);
+                if (!isTurnedOn) {
+                    turnedOffPCCount++;
+                }
+            }
+
+            res.json({ turnedOffPC: turnedOffPCCount });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Internal server error" });
         }
     };
 }

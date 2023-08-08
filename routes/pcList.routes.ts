@@ -17,5 +17,14 @@ export class pcListRoutes {
 
         // route to delete pc
         this.router.delete('/:pc_list_id', authMiddleware, this.plc.deletePC);
+
+        // route to count total pc
+        this.router.get('/count-all', authMiddleware, this.plc.countPCs);
+
+        // route to count turned on  pc
+        this.router.get('/turn-on', authMiddleware, this.plc.ccountTurnedOnPCs);
+
+        // route to count turned off  pc
+        this.router.get('/turn-off', authMiddleware, this.plc.ccountTurnedOffPCs);
     }
 }
