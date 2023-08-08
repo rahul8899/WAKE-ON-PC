@@ -24,9 +24,8 @@ export class App {
             next();
         });
 
-
         // Set up the cron job to check PC status every 10 seconds
-        const cronExpression = "*/10 * * * * *";
+        const cronExpression = "*/30 * * * * *";
         cron.schedule(cronExpression, () => this.psc.checkPCStatusForAll());
 
         const port = 2003;

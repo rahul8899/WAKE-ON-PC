@@ -1,12 +1,12 @@
 import express from "express"
 import { authRoutes } from "../routes/auth.routes";
-import { wolRoutes } from "../routes/wol.routes";
+import { wolRoutes } from "../service/wakeOnLan/wol.routes";
 import { roleRoutes } from "../routes/role.routes";
 import { moduleRoutes } from "../routes/module.routes";
 import { permissionRoutes } from "../routes/permission.routes";
 import { userRoutes } from "../routes/user.routes";
 import { pcListRoutes } from "../routes/pcList.routes";
-
+import { pcStatusRoutes } from "../service/pcStatus/pcStatus.routes";
 export class Routes {
     route = express.Router();
 
@@ -18,6 +18,8 @@ export class Routes {
         this.route.use('/permission', new permissionRoutes().router);
         this.route.use('/user', new userRoutes().router);
         this.route.use('/pclist', new pcListRoutes().router);
+        this.route.use('/pcstatus', new pcStatusRoutes().router);
+
         return this.route;
     }
 }

@@ -3,6 +3,7 @@ import { Users } from "../models/users";
 import { Role } from "../models/role";
 import bcrypt from "bcrypt";
 import { Sequelize } from "sequelize";
+import { json } from "body-parser";
 
 export class userController {
     createUser = async (req: Request, res: Response) => {
@@ -117,6 +118,41 @@ export class userController {
             }
         } catch (error) {
             console.log("There is error in deleting user", error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    };
+
+    passwordChange = async (req: Request, res: Response) => {
+        const { user_id } = req.params;
+        const { currentPassword, newPassword } = req.body; // old password
+        try {
+            // first find user by user_id 
+            const user = await Users.findByPk(user_id);
+            if (user) {
+                // chek that password that user enter and database password are same ?
+                const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+                if (!isPasswordValid) {
+                    return res.json({
+                        success: false,
+                        message: "Password not match"
+                    })
+                };
+                // if password match then hash new password
+                const hasedNewPassword = await bcrypt.hash(newPassword, 10);
+                // now update password 
+                await user.update({ password: hasedNewPassword });
+                return res.json({
+                    success: true,
+                    message: "password updated successfully"
+                });
+            } else {
+                return res.json({
+                    success: false,
+                    message: "user not found"
+                })
+            }
+        } catch (error) {
+            console.log("There is error in updating password", error);
             return res.status(500).json({ message: 'Internal server error' });
         }
     }

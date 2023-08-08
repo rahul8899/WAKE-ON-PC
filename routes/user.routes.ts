@@ -18,5 +18,7 @@ export class userRoutes {
         // route to delete user
         this.router.delete('/:user_id', authMiddleware, this.uc.deleteUser);
 
+        // route to change password
+        this.router.put('/change-password/:user_id', authMiddleware, this.uc.passwordChange);
     }
 }
