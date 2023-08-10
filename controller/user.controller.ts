@@ -3,7 +3,6 @@ import { Users } from "../models/users";
 import { Role } from "../models/role";
 import bcrypt from "bcrypt";
 import { Sequelize } from "sequelize";
-import { json } from "body-parser";
 
 export class userController {
     createUser = async (req: Request, res: Response) => {
@@ -124,7 +123,7 @@ export class userController {
 
     passwordChange = async (req: Request, res: Response) => {
         const { user_id } = req.params;
-        const { currentPassword, newPassword } = req.body; // old password
+        const { currentPassword, newPassword, confirmPassword } = req.body;
         try {
             // first find user by user_id 
             const user = await Users.findByPk(user_id);
@@ -134,9 +133,16 @@ export class userController {
                 if (!isPasswordValid) {
                     return res.json({
                         success: false,
-                        message: "Password not match"
+                        message: "Old password not matched"
                     })
                 };
+                // chek that newpassword and confirmpassword are same or not 
+                if (!(newPassword === confirmPassword)) {
+                    res.json({
+                        success: false,
+                        message: "newPassword and confirmPassword are not matched"
+                    })
+                }
                 // if password match then hash new password
                 const hasedNewPassword = await bcrypt.hash(newPassword, 10);
                 // now update password 
