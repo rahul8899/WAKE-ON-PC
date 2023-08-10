@@ -1,23 +1,29 @@
-// controllers/pcStatusController.ts
 import { Request, Response } from "express";
 import ping from "ping";
 import { pcList } from "../../models/pcList";
 
 export class PcStatusController {
-    isPCTurnedOn = async (req: Request, res: Response) => {
-        try {
-            const { ipAddress } = req.body;
-            if (!ipAddress) {
-                return res.status(400).json({ error: "ipAddress is required in the request body" });
-            }
 
-            const result = await this.pingIP(ipAddress);
-            res.json({ isPCTurnedOn: result });
+    updatePCStatusINDB = async () => {
+        try {
+            const allPC = await pcList.findAll();
+            if (!allPC) {
+                console.log("PC not found");
+            };
+            for (const item of allPC) {
+                const IP = item.IP;
+                let status = item.status;
+                const result = await this.pingIP(IP);
+                // console.log(`Is PC with IP ${IP} is turned On ? : `, result);
+                status = result;
+                await item.update({ status });
+            }
+            console.log("pc status updated in database.");
         } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: "Internal server error" });
+            console.log("Error in updating PC status in DB", error);
         }
     };
+
 
     pingIP = async (ipAddress: string): Promise<boolean> => {
         try {

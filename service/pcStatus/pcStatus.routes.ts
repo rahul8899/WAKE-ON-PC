@@ -6,8 +6,11 @@ export class pcStatusRoutes {
     router = Router();
     private psc: PcStatusController = new PcStatusController();
     constructor() {
-        // Route to wake
+        // Route to chek ALL PC status
         this.router.get('/', authMiddleware, this.psc.getPCStatus);
+
+        // route to update PC status in DB.
+        this.router.put('/', authMiddleware, this.psc.updatePCStatusINDB);
     };
 
 }
