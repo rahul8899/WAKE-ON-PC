@@ -21,6 +21,9 @@ export const pcList = db.sequelize.define('pc_lists', {
     IP: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    status: {
+        type: DataTypes.INTEGER
     }
 }, {
     tableName: 'pc_lists',

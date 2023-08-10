@@ -125,16 +125,8 @@ export class pcListController {
 
     ccountTurnedOnPCs = async (req: Request, res: Response) => {
         try {
-            const allPCs = await pcList.findAll();
-            let turnedOnPCCount = 0;
-
-            for (const pc of allPCs) {
-                const isTurnedOn = await this.pcc.pingIP(pc.IP);
-                if (isTurnedOn) {
-                    turnedOnPCCount++;
-                }
-            }
-            res.json({ turnedOnPC: turnedOnPCCount });
+            const turnOnPcCount = await pcList.count({ where: { status: 1 } });
+            res.json({ turnedOnPC: turnOnPcCount });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Internal server error" });
@@ -142,17 +134,8 @@ export class pcListController {
     };
     ccountTurnedOffPCs = async (req: Request, res: Response) => {
         try {
-            const allPCs = await pcList.findAll();
-            let turnedOffPCCount = 0;
-
-            for (const pc of allPCs) {
-                const isTurnedOn = await this.pcc.pingIP(pc.IP);
-                if (!isTurnedOn) {
-                    turnedOffPCCount++;
-                }
-            }
-
-            res.json({ turnedOffPC: turnedOffPCCount });
+            const turnOffPcCount = await pcList.count({ where: { status: 0 } });
+            res.json({ turnedOffPC: turnOffPcCount });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Internal server error" });
