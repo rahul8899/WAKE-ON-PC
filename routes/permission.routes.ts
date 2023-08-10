@@ -10,5 +10,8 @@ export class permissionRoutes {
     constructor() {
         // routes to create or update permission.
         this.router.post('/', authMiddleware, bodyValidate(permissionSchema), this.pc.changePermission);
+
+        // route to display permission
+        this.router.get('/:role_id', authMiddleware, this.pc.getAllPermission);
     }
 }
