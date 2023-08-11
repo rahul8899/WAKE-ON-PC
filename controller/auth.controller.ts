@@ -26,8 +26,8 @@ export class authController {
             }
 
             // Generate a JWT token and send it in the response
-            // const token = jwt.sign({ userId: user.user_id }, JWT_SECRET);
-            const token = jwt.sign({ userId: user.user_id }, JWT_SECRET, { expiresIn: "1h" });
+            const token = jwt.sign({ userId: user.user_id }, JWT_SECRET);
+            // const token = jwt.sign({ userId: user.user_id }, JWT_SECRET, { expiresIn: "1h" });
 
             return res.status(200).json({
                 message: "Login successful",

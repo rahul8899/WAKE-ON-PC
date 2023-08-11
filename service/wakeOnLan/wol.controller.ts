@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
-import * as dotenv from "dotenv";
 import wakeOnLan from "wake_on_lan";
 import { pcList } from "../../models/pcList";
-dotenv.config();
+import { PcStatusController } from "../pcStatus/pcStatus.controller";
 
 export class wolController {
+    private psc: PcStatusController = new PcStatusController();
+
     wakeup = async (req: Request, res: Response) => {
         const { pc_list_id } = req.params;
         try {
@@ -14,6 +15,11 @@ export class wolController {
                     message: "PC not found."
                 });
             };
+            const IP = pc.IP;
+            const result = await this.psc.pingIP(IP);
+            if (result) {
+                return res.json({ message: "PC is allredy turn on." })
+            }
             const MAC = pc.MAC;
             wakeOnLan.wake(MAC, function (error: any) {
                 if (error) {
