@@ -10,7 +10,7 @@ export class permissionRoutes {
     private pc: permissionController = new permissionController();
     constructor() {
         // routes to create or update permission.
-        this.router.post('/', authMiddleware, this.pc.changePermission);
+        this.router.post('/', bodyValidate(permissionSchema), authMiddleware, this.pc.changePermission);
 
         // route to display permission
         this.router.get('/:role_id', authMiddleware, this.pc.getAllPermission);

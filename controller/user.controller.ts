@@ -123,13 +123,13 @@ export class userController {
 
     passwordChange = async (req: Request, res: Response) => {
         const { user_id } = req.params;
-        const { currentPassword, newPassword, confirmPassword } = req.body;
+        const { Old_Password, New_Password, Confirm_Password } = req.body;
         try {
             // first find user by user_id 
             const user = await Users.findByPk(user_id);
             if (user) {
-                // chek that password that user enter and database password are same ?
-                const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+                // check that password that user enter and database password are same ?
+                const isPasswordValid = await bcrypt.compare(Old_Password, user.password);
                 if (!isPasswordValid) {
                     return res.json({
                         success: false,
@@ -137,14 +137,14 @@ export class userController {
                     })
                 };
                 // chek that newpassword and confirmpassword are same or not 
-                if (!(newPassword === confirmPassword)) {
+                if (!(New_Password === Confirm_Password)) {
                     res.json({
                         success: false,
                         message: "newPassword and confirmPassword are not matched"
                     })
                 }
                 // if password match then hash new password
-                const hasedNewPassword = await bcrypt.hash(newPassword, 10);
+                const hasedNewPassword = await bcrypt.hash(New_Password, 10);
                 // now update password 
                 await user.update({ password: hasedNewPassword });
                 return res.json({
